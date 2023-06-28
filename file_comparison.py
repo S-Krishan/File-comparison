@@ -18,7 +18,6 @@ class File_comparison:
             file2_lines = f.readlines()
         d = Differ()
         difference = list(d.compare(file1_lines, file2_lines))
-        print(difference)
         difference2 = '\n'.join(difference)
         print(difference2)
         return file1_lines, file2_lines, difference
@@ -51,7 +50,6 @@ class File_comparison:
                         else:
                             changes.write(f"<div style='background-color: rgba(255, 0, 0, 0.5); color: black;display: inline-block; '>{change[y]}</div>")
                 changes.write("<br>")
-                print("editted")
                 return "editted"
     def adding_a_line(self,changes,change,file1_lines,file2_lines):
         if change[2: ] in file2_lines and change[2: ] not in file1_lines:
@@ -59,7 +57,6 @@ class File_comparison:
             return "added"               
     def deleting_a_line(self,changes,change,file1_lines,file2_lines):
         if change[2: ] in file1_lines and change[2: ] not in file2_lines:
-                print("no")
                 changes.write(f"<div style='background-color: red; color: black;display: inline-block; '>{change}</div><br>")
                 return "deleted"
     def no_change(self,changes,change,file1_lines,file2_lines):
@@ -68,12 +65,8 @@ class File_comparison:
     def main(self):
         changes=open(r"C:\Users\sanpo\OneDrive\Desktop\changes.html","w")
         compare=self.initiate_comparison()
-        print(compare)
         if compare:
             file1_lines,file2_lines,difference=self.raw_comparison()
-            print(file1_lines)
-            print(file2_lines)
-            print(difference)
         x=0
         while len(difference)-x>=1:
             try:
