@@ -3,9 +3,19 @@ class File_comparison:
         self.file1=file1
         self.file2=file2
     def initiate_comparison(self):
+        from bs4 import BeautifulSoup
         import filecmp
+        with open (self.file1) as f:
+            file1_lines = f.readlines()
+        with open (self.file2) as f:
+            file2_lines = f.readlines()
+        file1_lines='\n'.join(file1_lines)
+        file2_lines="\n".join(file2_lines)
         if filecmp.cmp(self.file1,self.file2, shallow=False) ==True:
             compare=False
+        elif bool(BeautifulSoup(file1_lines, "html.parser").find())==True or bool(BeautifulSoup(file2_lines, "html.parser").find())==True:
+            compare=False
+            print("Error: HTML cannot be present in the files")
         else:
             compare=True
         return compare
@@ -41,7 +51,7 @@ class File_comparison:
                 for y in range(0,len(change)):
                     if nextLine[y]=="-" or nextLine[y]=="^":
                         if change[y]==" ":
-                            changes.write(f"<mark style='background-color: red; height: 20;'>&#160</mark>")
+                            changes.write(f"<mark style='background-color: red;display: inline-block;'>&#160</mark>")
                         else:
                             changes.write(f"<div style='background-color: red; color: black;display: inline-block; '>{change[y]}</div>")
                     else:
@@ -67,37 +77,37 @@ class File_comparison:
         compare=self.initiate_comparison()
         if compare:
             file1_lines,file2_lines,difference=self.raw_comparison()
-        x=0
-        while len(difference)-x>=1:
-            try:
-                twoIndexAbove=difference[x+2]
-                twoIndexBelow=difference[x-2]
-            except IndexError:
-                twoIndexAbove=" "
-                twoIndexBelow=" "
-            try:
-                oneIndexAbove=difference[x+1]
-                oneIndexBelow=difference[x-1]
-            except IndexError:
-                oneIndexAbove=" "
-                oneIndexBelow=" "
-            if len(difference[x])>len(oneIndexAbove) and oneIndexAbove[0]=="?":
-                oneIndexAbove=oneIndexAbove+(" "*(len(difference[x])-len(difference[x+1])))
-            elif len(difference[x])<len(oneIndexAbove) and oneIndexAbove[0]=="?":
-                difference[x]=difference[x]+(" "*(len(oneIndexAbove)-len(difference[x])))
-            if difference[x][0]=="?":
-                pass
-            added=""
-            deleted=""
-            editted=""
-            editted=self.editing_a_line(changes,difference[x],oneIndexAbove,oneIndexBelow,twoIndexAbove,twoIndexBelow)
-            if editted!="editted":
-                added=self.adding_a_line(changes,difference[x],file1_lines,file2_lines)
-            if added!="added" and editted!="editted":
-                deleted=self.deleting_a_line(changes,difference[x],file1_lines,file2_lines)
-            if deleted!="deleted" and added!="added" and editted!="editted":
-                self.no_change(changes,difference[x],file1_lines,file2_lines)
-            x=x+1
+            x=0
+            while len(difference)-x>=1:
+                try:
+                    twoIndexAbove=difference[x+2]
+                    twoIndexBelow=difference[x-2]
+                except IndexError:
+                    twoIndexAbove=" "
+                    twoIndexBelow=" "
+                try:
+                    oneIndexAbove=difference[x+1]
+                    oneIndexBelow=difference[x-1]
+                except IndexError:
+                    oneIndexAbove=" "
+                    oneIndexBelow=" "
+                if len(difference[x])>len(oneIndexAbove) and oneIndexAbove[0]=="?":
+                    oneIndexAbove=oneIndexAbove+(" "*(len(difference[x])-len(difference[x+1])))
+                elif len(difference[x])<len(oneIndexAbove) and oneIndexAbove[0]=="?":
+                    difference[x]=difference[x]+(" "*(len(oneIndexAbove)-len(difference[x])))
+                if difference[x][0]=="?":
+                    pass
+                added=""
+                deleted=""
+                editted=""
+                editted=self.editing_a_line(changes,difference[x],oneIndexAbove,oneIndexBelow,twoIndexAbove,twoIndexBelow)
+                if editted!="editted":
+                    added=self.adding_a_line(changes,difference[x],file1_lines,file2_lines)
+                if added!="added" and editted!="editted":
+                    deleted=self.deleting_a_line(changes,difference[x],file1_lines,file2_lines)
+                if deleted!="deleted" and added!="added" and editted!="editted":
+                    self.no_change(changes,difference[x],file1_lines,file2_lines)
+                x=x+1
         changes.close()
 comparison=File_comparison(r"C:\Users\sanpo\OneDrive\Desktop\original.txt",r"C:\Users\sanpo\OneDrive\Desktop\changed.txt")
 comparison.main()
