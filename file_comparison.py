@@ -2,6 +2,7 @@ class File_comparison:
     def __init__(self,file1,file2):
         self.file1=file1
         self.file2=file2
+        
     def initiate_comparison(self):
         from bs4 import BeautifulSoup
         import filecmp
@@ -31,18 +32,19 @@ class File_comparison:
         difference2 = '\n'.join(difference)
         print(difference2)
         return file1_lines, file2_lines, difference
+    
     #Formatting
     def editing_a_line(self,changes,change,nextLine,previousLine,nextNextLine,previousPreviousLine):
         if change[0]=="+" and "?" in nextLine:
                 for y in range(0,len(change)):
                     if nextLine[y]=="+" or nextLine[y]=="^":
                         if change[y]==" ":
-                            changes.write(f"<mark style='background-color: green;display: inline-block;'>&#160</mark>")
+                            changes.write("<mark style='background-color: green;display: inline-block;'>&#160</mark>")
                         else:
                             changes.write(f"<div style='background-color: green; color: black;display: inline-block;'>{change[y]}</div>")
                     else:
                         if change[y]==" ":
-                            changes.write(f"<mark style='background-color: #ddffdd;display: inline-block;'>&#160</mark>")
+                            changes.write("<mark style='background-color: #ddffdd;display: inline-block;'>&#160</mark>")
                         else:
                             changes.write(f"<div style='background-color: #ddffdd; color: black;display: inline-block; '>{change[y]}</div>")
                 changes.write("<br>")
@@ -51,12 +53,12 @@ class File_comparison:
                 for y in range(0,len(change)):
                     if nextLine[y]=="-" or nextLine[y]=="^":
                         if change[y]==" ":
-                            changes.write(f"<mark style='background-color: red;display: inline-block;'>&#160</mark>")
+                            changes.write("<mark style='background-color: red;display: inline-block;'>&#160</mark>")
                         else:
                             changes.write(f"<div style='background-color: red; color: black;display: inline-block; '>{change[y]}</div>")
                     else:
                         if change[y]==" ":
-                            changes.write(f"<mark style='background-color: rgba(255, 0, 0, 0.5); display: inline-block;'>&#160</mark>")
+                            changes.write("<mark style='background-color: rgba(255, 0, 0, 0.5); display: inline-block;'>&#160</mark>")
                         else:
                             changes.write(f"<div style='background-color: rgba(255, 0, 0, 0.5); color: black;display: inline-block; '>{change[y]}</div>")
                 changes.write("<br>")
@@ -72,6 +74,7 @@ class File_comparison:
     def no_change(self,changes,change,file1_lines,file2_lines):
         if change[2: ] in file1_lines and change[2: ] in file2_lines:
             changes.write(f"<div style='color: black;display: inline-block; '>{change}</div><br>")
+            
     def main(self):
         changes=open(r"C:\Users\sanpo\OneDrive\Desktop\changes.html","w")
         compare=self.initiate_comparison()
@@ -109,5 +112,6 @@ class File_comparison:
                     self.no_change(changes,difference[x],file1_lines,file2_lines)
                 x=x+1
         changes.close()
+    
 comparison=File_comparison(r"C:\Users\sanpo\OneDrive\Desktop\original.txt",r"C:\Users\sanpo\OneDrive\Desktop\changed.txt")
 comparison.main()
