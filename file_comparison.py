@@ -1,8 +1,8 @@
 class File_comparison:
-    def __init__(self,file1,file2):
+    def __init__(self,file1,file2,outputFile):
         self.file1=file1
         self.file2=file2
-        
+        self.outputFile=outputFile
     def initiate_comparison(self):
         from bs4 import BeautifulSoup
         import filecmp
@@ -14,6 +14,7 @@ class File_comparison:
         file2_lines="\n".join(file2_lines)
         if filecmp.cmp(self.file1,self.file2, shallow=False) ==True:
             compare=False
+            print("The files are the same")
         elif bool(BeautifulSoup(file1_lines, "html.parser").find())==True or bool(BeautifulSoup(file2_lines, "html.parser").find())==True:
             compare=False
             print("Error: HTML cannot be present in the files")
@@ -76,7 +77,7 @@ class File_comparison:
             changes.write(f"<div style='color: black;display: inline-block; '>{change}</div><br>")
             
     def main(self):
-        changes=open(r"C:\Users\sanpo\OneDrive\Desktop\changes.html","w")
+        changes=open(self.outputFile,"w")
         compare=self.initiate_comparison()
         if compare:
             file1_lines,file2_lines,difference=self.raw_comparison()
@@ -112,6 +113,18 @@ class File_comparison:
                     self.no_change(changes,difference[x],file1_lines,file2_lines)
                 x=x+1
         changes.close()
-    
-comparison=File_comparison(r"C:\Users\sanpo\OneDrive\Desktop\original.txt",r"C:\Users\sanpo\OneDrive\Desktop\changed.txt")
+import sys
+if len(sys.argv)!=4:
+    print("Usage <file1> <file2> <outputFile>")
+file1=sys.argv[1]
+file2=sys.argv[2]
+outputFile=sys.argv[3]
+
+comparison=File_comparison(r""+(file1),r""+(file2),r""+outputFile)
 comparison.main()
+
+r"""
+C:\Users\sanpo\OneDrive\Desktop\original.txt
+C:\Users\sanpo\OneDrive\Desktop\changed.txt
+
+"""
