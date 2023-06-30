@@ -115,7 +115,7 @@ class File_comparison:
         changes.close()
 import sys
 if len(sys.argv)!=4:
-    print("Usage <file1> <file2> <outputFile>")
+    print("Usage: <file1> <file2> <outputFile>")
 file1=sys.argv[1]
 file2=sys.argv[2]
 outputFile=sys.argv[3]
@@ -123,8 +123,4 @@ outputFile=sys.argv[3]
 comparison=File_comparison(r""+(file1),r""+(file2),r""+outputFile)
 comparison.main()
 
-r"""
-C:\Users\sanpo\OneDrive\Desktop\original.txt
-C:\Users\sanpo\OneDrive\Desktop\changed.txt
-
-"""
+#Unable to test command line compatibility on my system
